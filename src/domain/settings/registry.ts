@@ -26,7 +26,7 @@ export const SETTINGS_REGISTRY = [
     min: 0,
     max: 6,
     step: 1,
-    help: '0 = Sunday … 6 = Saturday. Weekly targets and the week view use this boundary.',
+    help: 'Weekly targets and the week view run from this day (0 = Sunday … 6 = Saturday).',
   },
 
   // ── Session ─────────────────────────────────────────────────────────────

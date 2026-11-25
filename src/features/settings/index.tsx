@@ -135,15 +135,30 @@ function SettingForm({
   return (
     <div className={kit.stack}>
       <p className={styles.hint}>{meta.help}</p>
-      <NumberStepper
-        label={meta.label}
-        value={v}
-        onChange={setV}
-        step={meta.step}
-        min={meta.min}
-        max={meta.max}
-        decimals={decimalsOf(meta.step)}
-      />
+      {meta.unit === 'weekday' ? (
+        <select
+          aria-label={meta.label}
+          className={kit.input}
+          value={v ?? meta.default}
+          onChange={(e) => setV(Number(e.target.value))}
+        >
+          {[1, 2, 3, 4, 5, 6, 0].map((d) => (
+            <option key={d} value={d}>
+              {WEEKDAY_LONG[d]}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <NumberStepper
+          label={meta.label}
+          value={v}
+          onChange={setV}
+          step={meta.step}
+          min={meta.min}
+          max={meta.max}
+          decimals={decimalsOf(meta.step)}
+        />
+      )}
       <p className={styles.hint}>
         Default {show(meta.default, meta)}
         {meta.unit === 'weekday' ? '' : ` · allowed ${meta.min}–${meta.max}`}
