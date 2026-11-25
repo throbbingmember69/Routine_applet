@@ -28,6 +28,7 @@ function session(over: Partial<Session> = {}): Session {
     finishedAt: null,
     tzOffsetMin: 0,
     status: 'in_progress',
+    source: 'logger',
     routineId: null,
     note: '',
     voidedAt: null,
@@ -149,9 +150,9 @@ describe('patches', () => {
   it('validates session patches: never back to in progress', () => {
     expect(checkSessionPatch({ status: 'abandoned' })).toEqual({ status: 'abandoned' })
     expect(code(() => checkSessionPatch({ status: 'in_progress' }))).toBe('invalid_status')
-    expect(code(() => checkSessionPatch({ date: '2026-01-01' } as never))).toBe(
-      'field_not_editable',
-    )
+    expect(checkSessionPatch({ date: '2026-11-20' as never })).toEqual({ date: '2026-11-20' })
+    expect(code(() => checkSessionPatch({ date: '2026-02-30' as never }))).toBe('invalid_date')
+    expect(code(() => checkSessionPatch({ routineId: 'r' } as never))).toBe('field_not_editable')
   })
 })
 

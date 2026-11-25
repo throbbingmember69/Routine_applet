@@ -91,6 +91,7 @@ function session(id: string, date: string, over: Partial<Session> = {}): Session
     finishedAt: T0 + DAY / 24,
     tzOffsetMin: 0,
     status: 'finished',
+    source: 'logger',
     routineId: null,
     note: '',
     voidedAt: null,

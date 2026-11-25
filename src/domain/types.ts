@@ -99,6 +99,8 @@ export interface RoutineItem extends RestRange {
 export type SessionStatus = 'in_progress' | 'finished' | 'abandoned'
 
 /** One run of a routine, an ad hoc session, or a quick log. */
+export type SessionSource = 'logger' | 'quick'
+
 export interface Session {
   id: string
   /** Local date the session started. */
@@ -107,7 +109,9 @@ export interface Session {
   finishedAt: EpochMs | null
   tzOffsetMin: number
   status: SessionStatus
-  /** null = ad hoc or a quick log. */
+  /** 'logger': started and logged block by block; 'quick': recorded in one step (quick log). */
+  source: SessionSource
+  /** null = started without a routine, or a quick log. */
   routineId: string | null
   note: string
   /** Soft delete: excluded from every calculation, restorable. */

@@ -150,6 +150,7 @@ const sessionRow = z.object({
   finishedAt: z.nullable(epochMs),
   tzOffsetMin: z.int(),
   status: z.enum(['in_progress', 'finished', 'abandoned']),
+  source: z.enum(['logger', 'quick']),
   routineId: z.nullable(id),
   note: text,
   voidedAt: z.nullable(epochMs),

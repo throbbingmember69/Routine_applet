@@ -76,6 +76,7 @@ async function logSomeBlocks(c: ReturnType<typeof ctx>) {
           finishedAt: T0,
           tzOffsetMin: 0,
           status: 'finished',
+          source: 'logger',
           routineId: 'rt-1',
           note: '',
           voidedAt,

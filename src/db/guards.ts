@@ -7,6 +7,7 @@
 //   removed only before any (non-voided) block is logged against it.
 // - A command only ever touches rows of the one session it was aimed at.
 // Guards are pure checks that throw a ServiceError with a stable code and a readable message.
+import { isLocalDate } from '@/domain/dates'
 import type { BlockLog, Session, SessionItem } from '@/domain/types'
 import { ServiceError } from '@/services/errors'
 
@@ -16,7 +17,7 @@ export const MAX_BLOCK_AMOUNT = 100_000
 /** Block fields that can change: freely while in progress, in Edit mode afterwards. */
 export const BLOCK_EDITABLE_FIELDS = ['amount', 'note'] as const
 /** Session fields Edit mode can change (void/restore have their own commands). */
-export const SESSION_EDITABLE_FIELDS = ['note', 'status'] as const
+export const SESSION_EDITABLE_FIELDS = ['note', 'status', 'date'] as const
 /** Statuses Edit mode may set: finished ↔ abandoned, never back to in progress. */
 export const EDITABLE_STATUSES = ['finished', 'abandoned'] as const
 
@@ -168,6 +169,9 @@ export function checkSessionPatch(patch: SessionPatch): SessionPatch {
   }
   if (p.note !== undefined && typeof p.note !== 'string') {
     throw new ServiceError('invalid_note', 'The note must be text.')
+  }
+  if (p.date !== undefined && (typeof p.date !== 'string' || !isLocalDate(p.date))) {
+    throw new ServiceError('invalid_date', 'Pick a valid date.', { date: p.date })
   }
   return p
 }

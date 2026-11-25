@@ -64,6 +64,7 @@ function session(p: Pick<Session, 'id' | 'date' | 'startedAt'> & Partial<Session
     finishedAt: p.startedAt + 3_600_000,
     tzOffsetMin: 0,
     status: 'finished',
+    source: 'logger',
     routineId: null,
     note: '',
     voidedAt: null,

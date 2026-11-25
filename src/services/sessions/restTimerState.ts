@@ -8,7 +8,7 @@ const KEY = 'restTimer'
 
 export interface RestTimerState {
   sessionId: string
-  sessionExerciseId: string
+  sessionItemId: string
   timer: RestTimer
 }
 
@@ -17,14 +17,14 @@ export async function getRestTimer(ctx: Pick<ServiceCtx, 'db'>): Promise<RestTim
   return v && typeof v === 'object' && 'timer' in v ? v : null
 }
 
-/** Start (or restart) the rest timer after a logged set. */
+/** Start (or restart) the rest timer after a logged block. */
 export async function startRestTimer(
   ctx: ServiceCtx,
-  input: { sessionId: string; sessionExerciseId: string; restMinSec: number; restMaxSec: number },
+  input: { sessionId: string; sessionItemId: string; restMinSec: number; restMaxSec: number },
 ): Promise<void> {
   await setAppState(ctx, KEY, {
     sessionId: input.sessionId,
-    sessionExerciseId: input.sessionExerciseId,
+    sessionItemId: input.sessionItemId,
     timer: startRest(ctx.now(), input),
   } satisfies RestTimerState)
 }
