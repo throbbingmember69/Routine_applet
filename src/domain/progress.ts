@@ -9,6 +9,7 @@
 // - Planned routine amounts (blocks × block amount) count required items; optional items are
 //   reported apart, as they count only once done.
 import { addDays, compareLocalDate, daysBetween, weekStart } from './dates'
+import { roundHalfAway } from './rounding'
 import type {
   Activity,
   BlockLog,
@@ -20,6 +21,8 @@ import type {
 } from './types'
 
 const DAYS_PER_WEEK = 7
+/** Sums are rounded to this many decimals so float noise (0.7 + 0.1 + 0.1 + 0.1) can't block "met". */
+const SUM_DECIMALS = 6
 
 /** The training week containing `date`: [start, end] inclusive. */
 export function weekOf(
@@ -103,7 +106,10 @@ export function doneByActivity(
   for (const b of input.blockLogs) {
     if (b.voidedAt !== null || !inWeek.has(b.sessionId)) continue
     const cur = out.get(b.activityId) ?? { amount: 0, blocks: 0 }
-    out.set(b.activityId, { amount: cur.amount + b.amount, blocks: cur.blocks + 1 })
+    out.set(b.activityId, {
+      amount: roundHalfAway(cur.amount + b.amount, SUM_DECIMALS),
+      blocks: cur.blocks + 1,
+    })
   }
   return out
 }
@@ -140,7 +146,7 @@ export function weeklyProgress(
         activityId: a.id,
         target,
         done: d.amount,
-        remaining: Math.max(0, target - d.amount),
+        remaining: Math.max(0, roundHalfAway(target - d.amount, SUM_DECIMALS)),
         fraction: Math.min(1, d.amount / target),
         status: d.amount >= target ? 'met' : 'under',
         blocks: d.blocks,

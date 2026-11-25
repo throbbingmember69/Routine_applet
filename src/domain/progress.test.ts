@@ -160,6 +160,20 @@ describe('weeklyProgress', () => {
     expect(p[0]).toMatchObject({ done: 170 })
   })
 
+  it('meets a target despite float noise in the sum', () => {
+    const tenths = [0.7, 0.1, 0.1, 0.1].map((amount) => b('mon', 'walk', amount))
+    const p = weeklyProgress(
+      {
+        activities: [{ id: 'walk', weeklyTarget: 1, progression: null, archivedAt: null }],
+        sessions,
+        blockLogs: tenths,
+      },
+      d('2026-11-23'),
+      MON,
+    )
+    expect(p[0]).toMatchObject({ done: 1, remaining: 0, status: 'met' })
+  })
+
   it('counts in-progress and finished sessions only', () => {
     expect([
       countsTowardVolume({ status: 'finished', voidedAt: null }),
